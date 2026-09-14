@@ -1,4 +1,4 @@
-[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [![lint](https://github.com/Bioforest-project/diversity/workflows/lint/badge.svg)](https://github.com/Bioforest-project/diversity/actions?query=workflow%3Alint)
+[![lint](https://github.com/Bioforest-project/diversity/workflows/lint/badge.svg)](https://github.com/Bioforest-project/diversity/actions?query=workflow%3Alint)
 
 # Introduction {.unnumbered}
 
@@ -20,7 +20,6 @@ All **diversity** analyses rely on the quarto documents (`files.qmd`) that can b
   - All raw data in `raw_data/`
 
   - All derived data in `derived_sata/`
-- Intermediary files in `outputs/`
 - Figures in `figures/`
 - Models in `models/`
 - R environment definition with [renv](https://rstudio.github.io/renv/articles/renv.html) in `renv/` and `renv/lock`

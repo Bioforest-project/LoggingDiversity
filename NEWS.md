@@ -1,3 +1,4 @@
+- diversity 0.1.0.9018: new figures
 - diversity 0.1.0.9017: new results, figs and text to be updated
 - diversity 0.1.0.9016: writing begins
 - diversity 0.1.0.9015: huge clean-up and merge with sensitivity

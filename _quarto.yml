@@ -13,6 +13,7 @@ book:
     - 31_raw_richness.qmd
     - 40_sensitivity.qmd
   appendices:
+    - 96_figures.qmd
     - 97_meeting.qmd
     - 99_references.qmd
 

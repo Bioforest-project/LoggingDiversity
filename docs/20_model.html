@@ -243,6 +243,12 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./96_figures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Figures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./97_meeting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Meetings</span></a>
   </div>
@@ -265,8 +271,7 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#old" id="toc-old" class="nav-link active" data-scroll-target="#old">Old</a></li>
-  <li><a href="#fits" id="toc-fits" class="nav-link" data-scroll-target="#fits">Fits</a></li>
+  <li><a href="#fits" id="toc-fits" class="nav-link active" data-scroll-target="#fits">Fits</a></li>
   </ul>
 </nav>
     </div>
@@ -313,17 +318,8 @@ LTP = 1 - e^{-\lambda_{plot} \times time} \\
 <p><span class="math display">\[\begin{align}
 STP = \delta_{plot} \times (\frac{time}{\tau_{site}} \times e^{1-\frac{time}{\tau_{site}}})^2 \\
 \end{align}\]</span></p>
-<section id="old" class="level2">
-<h2 class="anchored" data-anchor-id="old">Old</h2>
-<blockquote class="blockquote">
-<p>To be replaced by a <em>post-hoc</em> linear regression with uncertainty transmission to avoid a retro influence of the relation on <span class="math inline">\(\delta\)</span> estimates.</p>
-</blockquote>
-<p>We furthered linked the trajectories of species <span class="math inline">\(richness\)</span> to <span class="math inline">\(disturbance\)</span> with a hierarchical nested model that describes the relationship between the disturbance intensity of basal area and the intermediate diversity extremes that occur after disturbance, in line with the intermediate disturbance hypothesis, using a linear regression:</p>
-<p><span class="math display">\[\begin{align}
-\delta_{plot} \sim \mathcal N ( \delta_0+\gamma\times disturbance, \sigma_{\delta})
-\end{align}\]</span></p>
-<p>Here, <span class="math inline">\(\gamma\)</span> represents the linear effect of disturbance intensity on intermediate species richness extremes, and <span class="math inline">\(\delta_0\)</span> represents its intercept. Thus, a positive <span class="math inline">\(\gamma\)</span> value directly represents the intermediate disturbance hypothesis expectation.&nbsp;</p>
-<p><strong>To update:</strong> We used hyperlaw distributions for parameters of plot relative recovery rate plot, extremes timing parameters at the site level site and intensity parameters at the plot level plot with means values , , and and variances , , and . We used normal laws for plot and&nbsp; site and a cauchy law for plot for forest diversity metrics without assuming it sign and a lognormal law for forest structure assuming only positive values. The full model with associated priors is further described in SI note.</p>
+<p>We used hyperlaw normal distributions for parameters <span class="math inline">\(\lambda_{plot}\)</span> of plot relative recovery rate plot and <span class="math inline">\(\tau_{site}\)</span> extremes timing parameters at the site level site with means values <span class="math inline">\(\mu_{\lambda}\)</span> and <span class="math inline">\(\mu_{\tau}\)</span>, and variances <span class="math inline">\(\sigma_{\lambda}\)</span> and <span class="math inline">\(\sigma_{\tau}\)</span>. The full model with associated priors is further described in SI note (<strong>To do</strong>).</p>
+<p>The relationship between disturbance intensity with observed basal area loss <span class="math inline">\(BA~loss\)</span> and the intermediate disturbance intensity parameters at the plot level <span class="math inline">\(\delta_{plot}\)</span> was tested <em>a posteriori</em> with a simple linear regression of <span class="math inline">\(\delta_{plot}\)</span> against <span class="math inline">\(BA~loss\)</span> across sites, to avoid any influence of <span class="math inline">\(BA~loss\)</span> on <span class="math inline">\(\delta_{plot}\)</span> inference.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -388,12 +384,11 @@ STP = \delta_{plot} \times (\frac{time}{\tau_{site}} \times e^{1-\frac{time}{\ta
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="20_model_files/figure-html/models-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Caption.</figcaption>
+<figcaption>Figure 2: Schematic representation of modelling of species richness over time following a selective logging disturbance. The x-axis represents the number of years post-disturbance. The green lines represent the modelled trajectory of either raw or rarefied species richness. The transparency of the lines represents the height of the intermediate diversity maximums, as described by the intermediate disturbance hypothesis below. The trajectory is modelled using the adapted common framework for modelling recovery in disturbed tropical forests (see the Methods section for details). Here, <span class="math inline">\(delta_{plot}\)</span> represents the diversity extremes (minimums or maximums) at the intermediate stage of the recovery trajectory. A positive <span class="math inline">\(delta_{plot}\)</span> directly represents the hypothesis H1 that an intermediate maximum of diversity will be observed over time. Similarly, positive relationship between <span class="math inline">\(delta_{plot}\)</span> and observed basal area loss directly represents the hypothesis H2 that the intermediate maximum of diversity is driven by increasing disturbance intensity.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-</section>
 <section id="fits" class="level2">
 <h2 class="anchored" data-anchor-id="fits">Fits</h2>
 <p>Chunks below help running the models for raw and rarefied species richness.</p>

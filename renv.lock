@@ -321,6 +321,13 @@
       ],
       "Hash": "71778c0b60bbf439ac64e6a8be695917"
     },
+    "bitops": {
+      "Package": "bitops",
+      "Version": "1.1-0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "baf391dcfdfee22a934bdc688a4c0adf"
+    },
     "blob": {
       "Package": "blob",
       "Version": "1.3.0",
@@ -387,6 +394,17 @@
         "sass"
       ],
       "Hash": "82c0dcea3e967cfeaa263e920798a77e"
+    },
+    "caTools": {
+      "Package": "caTools",
+      "Version": "1.18.4",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "bitops"
+      ],
+      "Hash": "0e885f8ee5d5af8c308c4c3c451b8e81"
     },
     "cachem": {
       "Package": "cachem",
@@ -538,6 +556,18 @@
         "stats"
       ],
       "Hash": "acb51c45a64447d9deb5e4d5c9e0de9e"
+    },
+    "confintr": {
+      "Package": "confintr",
+      "Version": "1.0.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "boot",
+        "stats"
+      ],
+      "Hash": "f3e7567eabebba308f9c825a2bf249cf"
     },
     "conflicted": {
       "Package": "conflicted",
@@ -943,6 +973,25 @@
       ],
       "Hash": "fd46e8c8dba6b292508fe307d130cc4c"
     },
+    "ggh4x": {
+      "Package": "ggh4x",
+      "Version": "0.3.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "S7",
+        "cli",
+        "ggplot2",
+        "grid",
+        "gtable",
+        "lifecycle",
+        "rlang",
+        "scales",
+        "stats",
+        "vctrs"
+      ],
+      "Hash": "024c1c1d5894bf313a1625b167984f2e"
+    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "4.0.3",
@@ -964,6 +1013,60 @@
         "withr"
       ],
       "Hash": "98520fe6b2745c466dca8e46aaa86242"
+    },
+    "ggpmisc": {
+      "Package": "ggpmisc",
+      "Version": "1.0.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "caTools",
+        "confintr",
+        "dplyr",
+        "generics",
+        "ggplot2",
+        "ggpp",
+        "grid",
+        "lubridate",
+        "plyr",
+        "polynom",
+        "quantreg",
+        "rlang",
+        "scales",
+        "splus2R",
+        "stats",
+        "tibble",
+        "tidyr"
+      ],
+      "Hash": "d0a7e9783f63183a3c1e22c8dca13526"
+    },
+    "ggpp": {
+      "Package": "ggpp",
+      "Version": "0.6.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "MASS",
+        "R",
+        "dplyr",
+        "ggplot2",
+        "glue",
+        "grDevices",
+        "grid",
+        "gridExtra",
+        "lubridate",
+        "polynom",
+        "rlang",
+        "scales",
+        "stats",
+        "stringr",
+        "tibble",
+        "vctrs",
+        "xts",
+        "zoo"
+      ],
+      "Hash": "35a47056743ff4448c53e7eb497ce706"
     },
     "ggpubr": {
       "Package": "ggpubr",
@@ -2107,6 +2210,17 @@
       ],
       "Hash": "d707e40e0e2ba49dd8a4644d74933259"
     },
+    "splus2R": {
+      "Package": "splus2R",
+      "Version": "1.3-5",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "methods"
+      ],
+      "Hash": "51f4ca9989e0de9782037e426298bee6"
+    },
     "stringi": {
       "Package": "stringi",
       "Version": "1.8.7",
@@ -2484,6 +2598,18 @@
         "rlang"
       ],
       "Hash": "568fe669c645b2007e4e8fcf5cde40e7"
+    },
+    "xts": {
+      "Package": "xts",
+      "Version": "0.14.3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "methods",
+        "zoo"
+      ],
+      "Hash": "7a5bd9bb4b213c5131a535cb0af39724"
     },
     "yaml": {
       "Package": "yaml",

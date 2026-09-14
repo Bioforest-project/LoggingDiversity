@@ -6,7 +6,7 @@
 library(tidyverse)
 ```
 
-The 11 study sites comprise a new compilation of longitudinal tree census records from tropical forest experiments in which defined logging treatments were imposed, and forest recovery was determined through periodic censuses on permanent plots. The sites comprises 7 sites in South America (Argentina: Misiones; Costa Rica: Tirimbina; Brazil: Iracema, Jari, Jenaro Herrera, Moju, Pad Limo; French Guian: Paracou), 1 site in Africa (Mbaiki in Central African Republic) and 1 site in Asia (SUAS in Malaysia) (Table X). The sites range in latitude from 27°S to 11°N and in longitude from 84°W to 117°E. They are characterised by a subtropical to tropical climate, with annual precipitation ranging from 1,236 to 3,640 mm and dry seasons lasting from 37 to 177 days [@abatzoglou2018]. Selective logigng happened in all sites with X% sites including reduced impact logging parcatives and X% sites with additional practices (to be listed). All sites include pre-logging inventories and some ontrol and undisturbed plots (X sites). Depending on the site, plot areas range from 0.25 to 6.25 hectares, with a total sampled area ranging from X to 56 hectares (see Table X). To facilitate comparison, the plots were virtually pulled or subdivided into standard 1-hectare plots. All trees with a diameter at breast height (DBH) above 10 cm (except in Jari where the minimum DBH was 20 cm) were inventoried and then spatialised before botanical identification. Their diameters were regularly measured, with X to 28 censuses conducted over X to 18 years post-logging. The 110 study sites were selected from a larger pool of 31 sites in tropical forests. However, we focused on sites with more than one logged plot and several censuses shortly after logging, with a minimum of two censuses, and the presence of pre-logging inventories.
+The 11 study sites comprise a new compilation of longitudinal tree census records from tropical forest experiments in which defined logging treatments were imposed, and forest recovery was determined through periodic censuses on permanent plots. The sites comprises 7 sites in South America (Argentina: Misiones; Costa Rica: Tirimbina; Brazil: Iracema, Jari, Jenaro Herrera, Moju, Pad Limo; French Guiana: Paracou), 1 site in Africa (Mbaiki in Central African Republic) and 1 site in Asia (SUAS in Malaysia) (**Table X**). The sites range in latitude from 27°S to 11°N and in longitude from 84°W to 117°E. They are characterised by a subtropical to tropical climate, with annual precipitation ranging from 1,236 to 3,640 mm and dry seasons lasting from 37 to 177 days [@abatzoglou2018]. Selective logging happened in all sites with **X%** sites including reduced impact logging practices and **X%** sites with additional practices (**to be listed**). All sites include pre-logging inventories. Depending on the site, plot areas range from 0.25 to 6.25 hectares, with a total sampled area ranging from **X** to 56 hectares (see **Table X**). To facilitate comparison, the plots were virtually pulled or subdivided into standard 1-hectare plots. All trees with a diameter at breast height (DBH) above 10 cm (except in Jari where the minimum DBH was 20 cm) were inventoried and then spatialised before botanical identification. Their diameters were regularly measured, with **X** to 28 censuses conducted over **X** to **X** years post-logging. The 11 study sites were selected from a larger pool of 31 sites in tropical forests. However, we focused on sites with more than one logged plot and several censuses shortly after logging, with a minimum of two censuses, and the presence of pre-logging inventories. Within each site, we focused on logged plots by removing control plots and 1-ha subplots without lost basal area.
 
 ## Preparation
 
@@ -111,7 +111,9 @@ data |>
 
 ## Sites
 
-**A map of sites and a table of sites information (to be defined) need to be redone.**
+**A map of sites (previous Fig. 1).**
+
+**A table of sites information (to be defined, previous table 1).**
 
 ## Basal area
 
@@ -137,29 +139,9 @@ read_tsv("data/derived_data/data.tsv") |>
   scale_color_viridis_c("BA lost [%]")
 ```
 
-## Undetermined species
-
-```{r coverage_sp}
-#| message: false
-#| warning: false
-#| fig-cap: "Raw species richness trajectories per site and plots with time after and before logging. Colors indicate basal area lost in percentage."
-read_tsv("data/derived_data/data.tsv") |>
-  ggplot(aes(rel_year, p_undet_spp*100,
-             group = paste(site, plot), col = dist_obs * 100
-  )) +
-  geom_line() +
-  geom_point() +
-  facet_wrap(~site, nrow = 6) +
-  theme_bw() +
-  xlab(expression("Time post logging" ~ "[ yr ]")) +
-  ylab(expression("Undetermined species" ~ "[ % ]")) +
-  geom_vline(xintercept = 0) +
-  scale_color_viridis_c("BA lost [%]")
-```
-
 ## Raw species richness
 
-For each site and plot, we investigated the raw species richness as the total number of species knowingly biased by the number of stems, number of tree identified to the species level, and botanist expertise.
+For each site and plot, we investigated the raw species richness as the total number of species knowingly biased by the number of stems, number of tree identified to the species level, and botanist expertise in space and [time]{.underline}.
 
 ```{r diversity_q0_sp}
 #| message: false
@@ -183,7 +165,7 @@ read_tsv("data/derived_data/data.tsv") |>
 
 ## Rarefied species richness
 
-For each site and plot, we further investigated the raredfied species richness using a jackknife procedure to build the rarefaction curve and expressing species richness equivalent to 100 trees. The metric corrects for the variation of number of stems in time, but not number of tree identified to the species level, and botanist expertise. However, as trajectories will be relatively modelled per plot, we may assume that they are comparable.
+For each site and plot, we further investigated the rarefied species richness using a jackknife procedure to build the rarefaction curve and expressing species richness equivalent to 100 trees. The metric corrects for the variation of number of stems in time, but not number of tree identified to the species level, and botanist expertise in space and [time]{.underline}. However, as trajectories will be relatively modelled per plot, we may assume that they are comparable.
 
 ```{r diversity_q0_sp_rar}
 #| message: false
@@ -203,6 +185,28 @@ read_tsv("data/derived_data/data.tsv") |>
   } ~ "100 trees"^{
     -1
   } ~ "]")) +
+  geom_vline(xintercept = 0) +
+  scale_color_viridis_c("BA lost [%]")
+```
+
+## Undetermined species
+
+To assess the bias of species richness due to the number of tree identified to the species level, and botanist expertise in space and [time]{.underline}, we further plot the percentage of unidentified species per site, plot and in time, showing that some site have low level of determination to the species level (\<50%) and some have a strong time trend (e.g Paracou and Mbaiki).
+
+```{r coverage_sp}
+#| message: false
+#| warning: false
+#| fig-cap: "Raw species richness trajectories per site and plots with time after and before logging. Colors indicate basal area lost in percentage."
+read_tsv("data/derived_data/data.tsv") |>
+  ggplot(aes(rel_year, p_undet_spp*100,
+             group = paste(site, plot), col = dist_obs * 100
+  )) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~site, nrow = 6) +
+  theme_bw() +
+  xlab(expression("Time post logging" ~ "[ yr ]")) +
+  ylab(expression("Undetermined species" ~ "[ % ]")) +
   geom_vline(xintercept = 0) +
   scale_color_viridis_c("BA lost [%]")
 ```

@@ -1,0 +1,234 @@
+# Figures {.unnumbered}
+
+Forge to prepare manuscript figures.
+
+```{r set}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(cmdstanr)
+```
+
+```{r data_prep}
+#| eval: false
+data <- read_tsv("data/derived_data/data.tsv")
+ind <- data |>
+  select(site, sitenum, plot, plotnum, dist_obs) |>
+  unique()
+data_u <- ind |>
+  left_join(filter(data, rel_year <= 0))
+data_r <- ind |>
+  left_join(filter(data, rel_year > 0))
+out_raw <- file.path("chains", "raw")
+fit_raw <- as_cmdstan_fit(list.files(out_raw, full.names = TRUE))
+trajectories_raw <- fit_raw$summary("y_pred", "median") |>
+  separate(variable,
+           c("variable", "pred", "rel_year", "plotnum"),
+           convert = TRUE
+  ) |>
+  select(-pred, -variable) |>
+  rename(y = median) |>
+  left_join(ind)
+pars_p_raw <- fit_raw$summary(c("delta_p")) |>
+  separate(variable, c("variable", "p", "plotnum"), convert = TRUE) |>
+  select(-p) |>
+  left_join(ind)
+out_rar <- file.path("chains", "rarefied")
+fit_rar <- as_cmdstan_fit(list.files(out_rar, full.names = TRUE))
+trajectories_rar <- fit_rar$summary("y_pred", "median") |>
+  separate(variable,
+           c("variable", "pred", "rel_year", "plotnum"),
+           convert = TRUE
+  ) |>
+  select(-pred, -variable) |>
+  rename(y = median) |>
+  left_join(ind)
+pars_p_rar <- fit_rar$summary(c("delta_p")) |>
+  separate(variable, c("variable", "p", "plotnum"), convert = TRUE) |>
+  select(-p) |>
+  left_join(ind)
+list(Raw = trajectories_raw, Rarefied = trajectories_rar) |> 
+  bind_rows(.id = "type") |> 
+  write_tsv("data/derived_data/trajectories.tsv")
+list(Raw = pars_p_raw, Rarefied = pars_p_rar) |> 
+  bind_rows(.id = "type") |> 
+  write_tsv("data/derived_data/pars.tsv")
+```
+
+## Trajectories
+
+```{r trajs}
+#| message: false
+#| warning: false
+#| fig-width: 8
+#| fig-height: 10
+#| fig-cap: "Fig 3: The trajectories of species diversity recovery over time following a selective logging disturbance are shown across continents, sites and plots. The x-axis represents the number of years post-disturbance and the y-axis represents either rarefied (left) or raw (right) species richness. The lines represent the modelled recovery trajectories, while the points show the observations."
+g <- read_tsv("data/derived_data/trajectories.tsv") |> 
+  ggplot(aes(rel_year, y, col = paste(site, plot))) +
+  geom_point(
+    data = read_tsv("data/derived_data/data.tsv") |> 
+      select(rel_year, site, plot, dist_obs, diversity_q0_sp, diversity_q0_sp_rar) |> 
+      rename(Raw = diversity_q0_sp, Rarefied = diversity_q0_sp_rar) |> 
+      pivot_longer(cols = Raw:Rarefied, names_to = "type", values_to = "y"),
+    alpha = .5
+  ) +
+  geom_line() +
+  ggh4x::facet_grid2(site ~ type, scales = "free_y", independent = "y") +
+  theme_bw() +
+  xlab(expression("Time post logging" ~ "[ yr ]")) +
+  ylab(expression("Species richness" ~ "[" ~ N ~ ha^{
+    -1
+  } ~ "100 trees"^{
+    -1
+  } ~ "]")) +
+  geom_vline(xintercept = 0) +
+  scale_color_manual(
+    guide = "none",
+    values = rainbow(242, s = .6, v = .9)[sample(1:242, 242)]
+  )
+cowplot::save_plot("figures/trajectories.png",
+                   plot = g,
+                   base_width = 8,
+                   base_height = 10,
+                   dpi = 300,
+                   bg = "white"
+)
+g
+```
+
+## Global regression
+
+```{r regression_global}
+#| message: false
+#| warning: false
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "Fig 4: Caption."
+g <- read_tsv("data/derived_data/pars.tsv") |> 
+  mutate(dist = dist_obs * 100, 
+         delta = median * 100) |> 
+  ggplot(aes(dist_obs * 100, median * 100)) +
+  geom_point(aes(col = site)) +
+  theme_bw() +
+  scale_color_discrete() +
+  theme(legend.position = "bottom") +
+  xlab("BA lost [%]") +
+  ylab(delta[~Diversity] ~ "[ % ]") +
+  facet_wrap(~ type) +
+  ggpmisc::stat_poly_line() +
+  ggpmisc::stat_poly_eq(ggpmisc::use_label("eq", "adj.R2", "P", "n", sep = "*\"; \"*")) +
+  scale_color_discrete("")
+cowplot::save_plot("figures/regression_global.png",
+                   plot = g,
+                   base_width = 8,
+                   base_height = 5,
+                   dpi = 300,
+                   bg = "white"
+)
+g
+```
+
+## Sites regressions
+
+```{r regression_site}
+#| message: false
+#| warning: false
+#| fig-width: 8
+#| fig-height: 8
+#| fig-cap: "Fig 5: Caption."
+g <- read_tsv("data/derived_data/pars.tsv") |> 
+  mutate(dist = dist_obs * 100, 
+         delta = median * 100) |> 
+  ggplot(aes(dist_obs, median, col = type)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~site) +
+  geom_smooth(method = "lm", formula = y ~ 1 + x) +
+  xlab("BA lost [%]") +
+  ylab(delta[~Diversity] ~ "[ % ]") +
+  ggpubr::stat_cor(p.accuracy = 0.001) +
+  theme(legend.position = "bottom") +
+  scale_color_discrete("")
+cowplot::save_plot("figures/regression_site.png",
+                   plot = g,
+                   base_width = 8,
+                   base_height = 8,
+                   dpi = 300,
+                   bg = "white"
+)
+g
+```
+
+## Sensitivity
+
+```{r sensitivity}
+#| message: false
+#| warning: false
+#| fig-width: 8
+#| fig-height: 8
+#| fig-cap: "Fig 5: Caption."
+g <- read_tsv("data/derived_data/sensitivity_delta_rec.tsv") |>
+  na.omit() |>
+  ggplot(aes(dist_obs * 100, median * 100)) +
+  geom_point(aes(col = site)) +
+  ggpmisc::stat_poly_line() +
+  ggpmisc::stat_poly_eq(ggpmisc::use_label("eq", "adj.R2", sep = "*\"; \"*"),
+                        label.y = 0.9) +
+  ggpmisc::stat_poly_eq(ggpmisc::use_label("P", "n", sep = "*\"; \"*"),
+                        label.y = 0.8) +
+  theme_bw() +
+  facet_wrap(~ paste0(area, "-ha")) +
+  xlab("BA lost [%]") +
+  ylab(delta[~Diversity] ~ "[ % ]") +
+  theme(legend.position = "bottom") +
+  scale_color_discrete("")
+cowplot::save_plot("figures/sensitivity.png",
+                   plot = g,
+                   base_width = 8,
+                   base_height = 8,
+                   dpi = 300,
+                   bg = "white"
+)
+g
+```
+
+## Intermediate maximum timing
+
+```{r tau}
+#| message: false
+#| warning: false
+#| fig-width: 6
+#| fig-height: 4
+#| fig-cap: "Fig 6: Caption."
+data <- read_tsv("data/derived_data/data.tsv")
+ind <- data |>
+  select(site, sitenum, plot, plotnum, dist_obs) |>
+  unique()
+g <- file.path("chains", "rarefied") |> 
+  list.files(full.names = TRUE) |> 
+  as_cmdstan_fit() |> 
+  (\(x) x$summary("tau0_s"))() |> 
+  separate(variable, c("variable", "s", "sitenum"), convert = TRUE) |>
+  select(-s) |>
+  left_join(select(ind, site, sitenum)) |>
+  mutate_at(c("median", "q5", "q95"), ~ . + 3) |>
+  ggplot(aes(median, reorder(site, median))) +
+  geom_vline(xintercept = c(0, 30), col = "darkgrey") +
+  geom_segment(aes(
+    x = (median - sd),
+    xend = (median + sd)
+  )) +
+  geom_segment(aes(x = q5, xend = q95), size = .1) +
+  geom_point() +
+  theme_bw() +
+  xlab(expression(tau ~ "[ yr ]")) +
+  ylab("")
+cowplot::save_plot("figures/tau.png",
+                   plot = g,
+                   base_width = 6,
+                   base_height = 4,
+                   dpi = 300,
+                   bg = "white"
+)
+g
+```

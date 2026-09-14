@@ -29,24 +29,14 @@ $$\begin{align}
 STP = \delta_{plot} \times (\frac{time}{\tau_{site}} \times e^{1-\frac{time}{\tau_{site}}})^2 \\
 \end{align}$$
 
-## Old
+We used hyperlaw normal distributions for parameters $\lambda_{plot}$ of plot relative recovery rate plot and $\tau_{site}$ extremes timing parameters at the site level site with means values $\mu_{\lambda}$ and $\mu_{\tau}$, and variances $\sigma_{\lambda}$ and $\sigma_{\tau}$. The full model with associated priors is further described in SI note (**To do**).
 
-> To be replaced by a *post-hoc* linear regression with uncertainty transmission to avoid a retro influence of the relation on $\delta$ estimates.
-
-We furthered linked the trajectories of species $richness$ to $disturbance$ with a hierarchical nested model that describes the relationship between the disturbance intensity of basal area and the intermediate diversity extremes that occur after disturbance, in line with the intermediate disturbance hypothesis, using a linear regression:
-
-$$\begin{align}
-\delta_{plot} \sim \mathcal N ( \delta_0+\gamma\times disturbance, \sigma_{\delta})
-\end{align}$$
-
-Here, $\gamma$ represents the linear effect of disturbance intensity on intermediate species richness extremes, and $\delta_0$ represents its intercept. Thus, a positive $\gamma$ value directly represents the intermediate disturbance hypothesis expectation. 
-
-**To update:** We used hyperlaw distributions for parameters of plot relative recovery rate plot, extremes timing parameters at the site level site and intensity parameters at the plot level plot with means values , , and and variances , , and . We used normal laws for plot and  site and a cauchy law for plot for forest diversity metrics without assuming it sign and a lognormal law for forest structure assuming only positive values. The full model with associated priors is further described in SI note.
+The relationship between disturbance intensity with observed basal area loss $BA~loss$ and the intermediate disturbance intensity parameters at the plot level $\delta_{plot}$ was tested *a posteriori* with a simple linear regression of $\delta_{plot}$ against $BA~loss$ across sites, to avoid any influence of $BA~loss$ on $\delta_{plot}$ inference.
 
 ```{r models}
 #| message: false
 #| warning: false
-#| fig-cap: "Caption."
+#| fig-cap: "Figure 2: Schematic representation of modelling of species richness over time following a selective logging disturbance. The x-axis represents the number of years post-disturbance. The green lines represent the modelled trajectory of either raw or rarefied species richness. The transparency of the lines represents the height of the intermediate diversity maximums, as described by the intermediate disturbance hypothesis below. The trajectory is modelled using the adapted common framework for modelling recovery in disturbed tropical forests (see the Methods section for details). Here, $delta_{plot}$ represents the diversity extremes (minimums or maximums) at the intermediate stage of the recovery trajectory. A positive $delta_{plot}$ directly represents the hypothesis H1 that an intermediate maximum of diversity will be observed over time. Similarly, positive relationship between $delta_{plot}$ and observed basal area loss directly represents the hypothesis H2 that the intermediate maximum of diversity is driven by increasing disturbance intensity."
 ltp <- function(time, dist, thetainf, lambda) {
   theta0 <- thetainf * dist
   ltp <- 1 - exp(-lambda * time)
