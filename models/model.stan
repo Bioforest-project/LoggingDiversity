@@ -30,9 +30,6 @@ parameters {
   real<lower=0> sigma_tau;
   real<lower=0> sigma;
   vector<lower=-phi_p, upper=2>[p] delta_p;
-  real<lower=0> sigma_delta;
-  real<lower=-4, upper=4> delta0;
-  real<lower=-4, upper=4> gamma;
   // undist
   real<lower=0> sigma_u;
   vector<lower=10, upper=200>[p] theta_p;
@@ -48,11 +45,10 @@ model {
   log(y_u) ~ normal(log(theta_p[plot_u]), sigma_u);
   log(y) ~ normal(log(mu), sigma);
   lambda_p ~ normal(mu_lambda, sigma_lambda);
-  delta_p ~ cauchy(delta0 + gamma .* dist_p, sigma_delta);
+  delta_p ~ std_normal();
   tau0_s ~ normal(mu_tau0, sigma_tau);
   sigma ~ std_normal();
   sigma_lambda ~ std_normal();
-  sigma_delta ~ std_normal();
   sigma_tau ~ std_normal();
 }
 generated quantities {

@@ -280,6 +280,22 @@
       ],
       "Hash": "0292a12658054b6d0b9ebe221aef3fcf"
     },
+    "bayestestR": {
+      "Package": "bayestestR",
+      "Version": "0.19.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "datawizard",
+        "graphics",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "bfa86812016598e0b1035c924b38001b"
+    },
     "bit": {
       "Package": "bit",
       "Version": "4.6.0",
@@ -603,6 +619,19 @@
       ],
       "Hash": "da9ddede68a6f6e5d3098c0ab81b6e1f"
     },
+    "datawizard": {
+      "Package": "datawizard",
+      "Version": "1.4.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "insight",
+        "stats",
+        "utils"
+      ],
+      "Hash": "f68476f60bbb60152201fce0181d3257"
+    },
     "dbplyr": {
       "Package": "dbplyr",
       "Version": "2.6.0",
@@ -726,6 +755,23 @@
         "vctrs"
       ],
       "Hash": "7f6db50cf8183cce63c06510fc74a318"
+    },
+    "effectsize": {
+      "Package": "effectsize",
+      "Version": "1.0.3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "insight",
+        "parameters",
+        "performance",
+        "stats",
+        "utils"
+      ],
+      "Hash": "db434d7b3a263fdbe2c77bf63549cb98"
     },
     "entropart": {
       "Package": "entropart",
@@ -880,6 +926,22 @@
         "methods"
       ],
       "Hash": "4b29bf698d0c7bdb9f1e4976e7ade41d"
+    },
+    "ggeffects": {
+      "Package": "ggeffects",
+      "Version": "2.3.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "datawizard",
+        "graphics",
+        "insight",
+        "reformulas",
+        "stats",
+        "utils"
+      ],
+      "Hash": "fd46e8c8dba6b292508fe307d130cc4c"
     },
     "ggplot2": {
       "Package": "ggplot2",
@@ -1169,6 +1231,19 @@
         "uuid"
       ],
       "Hash": "99df65cfef20e525ed38c3d2577f7190"
+    },
+    "insight": {
+      "Package": "insight",
+      "Version": "1.5.4",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "2732048678f3de774af9c3d678eb8c2a"
     },
     "isoband": {
       "Package": "isoband",
@@ -1461,6 +1536,23 @@
       ],
       "Hash": "627d6993db1043703c0b084fa432f21f"
     },
+    "parameters": {
+      "Package": "parameters",
+      "Version": "0.29.3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "graphics",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "bdeb7dfca6107a4defd97d570fdfb719"
+    },
     "pbkrtest": {
       "Package": "pbkrtest",
       "Version": "0.5.5",
@@ -1478,6 +1570,22 @@
         "numDeriv"
       ],
       "Hash": "b21709e9689035a7e1a3fa828ac3e058"
+    },
+    "performance": {
+      "Package": "performance",
+      "Version": "0.18.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "9142e938151bb13016e7b44da600189f"
     },
     "permute": {
       "Package": "permute",
@@ -1915,6 +2023,89 @@
         "R6"
       ],
       "Hash": "c538f20abf5a9a4ab8fac8f1ee3f50e8"
+    },
+    "sjPlot": {
+      "Package": "sjPlot",
+      "Version": "2.9.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "dplyr",
+        "ggeffects",
+        "ggplot2",
+        "grDevices",
+        "graphics",
+        "insight",
+        "knitr",
+        "parameters",
+        "performance",
+        "purrr",
+        "rlang",
+        "scales",
+        "sjlabelled",
+        "sjmisc",
+        "sjstats",
+        "stats",
+        "tidyr",
+        "utils"
+      ],
+      "Hash": "0e1d35b731eb1329dff16ceb3f8eb818"
+    },
+    "sjlabelled": {
+      "Package": "sjlabelled",
+      "Version": "1.2.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "datawizard",
+        "insight",
+        "stats",
+        "tools",
+        "utils"
+      ],
+      "Hash": "4bd18166ef8ca74aeec74ad295dfe77f"
+    },
+    "sjmisc": {
+      "Package": "sjmisc",
+      "Version": "2.8.11",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "datawizard",
+        "dplyr",
+        "insight",
+        "magrittr",
+        "methods",
+        "purrr",
+        "rlang",
+        "sjlabelled",
+        "stats",
+        "tidyselect",
+        "utils"
+      ],
+      "Hash": "a87779cbe0dfe240d8c387ecbe8e0667"
+    },
+    "sjstats": {
+      "Package": "sjstats",
+      "Version": "0.19.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "datawizard",
+        "effectsize",
+        "insight",
+        "parameters",
+        "performance",
+        "stats",
+        "utils"
+      ],
+      "Hash": "d707e40e0e2ba49dd8a4644d74933259"
     },
     "stringi": {
       "Package": "stringi",

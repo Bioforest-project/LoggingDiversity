@@ -6,7 +6,7 @@
 library(tidyverse)
 ```
 
-The 10 study sites (**SUAS to be added back**) comprise a new compilation of longitudinal tree census records from tropical forest experiments in which defined logging treatments were imposed, and forest recovery was determined through periodic censuses on permanent plots. The sites comprises 7 sites in South America (Argentina: Misiones; Costa Rica: Tirimbina; Brazil: Iracema, Jari, Jenaro Herrera, Moju, Pad Limo; French Guian: Paracou), 1 site in Africa (Mbaiki in Central African Republic) and 1 site in Asia (Suas in Malaysia) (Table X). The sites range in latitude from 27°S to 11°N and in longitude from 84°W to 117°E. They are characterised by a subtropical to tropical climate, with annual precipitation ranging from 1,236 to 3,640 mm and dry seasons lasting from 37 to 177 days [@abatzoglou2018]. Selective logigng happened in all sites with X% sites including reduced impact logging parcatives and X% sites with additional practices (to be listed). All sites include pre-logging inventories and some ontrol and undisturbed plots (X sites). Depending on the site, plot areas range from 0.25 to 6.25 hectares, with a total sampled area ranging from X to 56 hectares (see Table X). To facilitate comparison, the plots were virtually pulled or subdivided into standard 1-hectare plots. All trees with a diameter at breast height (DBH) above 10 cm (except in Jari where the minimum DBH was 20 cm) were inventoried and then spatialised before botanical identification. Their diameters were regularly measured, with X to 28 censuses conducted over X to 18 years post-logging. The 110 study sites were selected from a larger pool of 31 sites in tropical forests. However, we focused on sites with more than one logged plot and several censuses shortly after logging, with a minimum of two censuses, and the presence of pre-logging inventories.
+The 11 study sites comprise a new compilation of longitudinal tree census records from tropical forest experiments in which defined logging treatments were imposed, and forest recovery was determined through periodic censuses on permanent plots. The sites comprises 7 sites in South America (Argentina: Misiones; Costa Rica: Tirimbina; Brazil: Iracema, Jari, Jenaro Herrera, Moju, Pad Limo; French Guian: Paracou), 1 site in Africa (Mbaiki in Central African Republic) and 1 site in Asia (SUAS in Malaysia) (Table X). The sites range in latitude from 27°S to 11°N and in longitude from 84°W to 117°E. They are characterised by a subtropical to tropical climate, with annual precipitation ranging from 1,236 to 3,640 mm and dry seasons lasting from 37 to 177 days [@abatzoglou2018]. Selective logigng happened in all sites with X% sites including reduced impact logging parcatives and X% sites with additional practices (to be listed). All sites include pre-logging inventories and some ontrol and undisturbed plots (X sites). Depending on the site, plot areas range from 0.25 to 6.25 hectares, with a total sampled area ranging from X to 56 hectares (see Table X). To facilitate comparison, the plots were virtually pulled or subdivided into standard 1-hectare plots. All trees with a diameter at breast height (DBH) above 10 cm (except in Jari where the minimum DBH was 20 cm) were inventoried and then spatialised before botanical identification. Their diameters were regularly measured, with X to 28 censuses conducted over X to 18 years post-logging. The 110 study sites were selected from a larger pool of 31 sites in tropical forests. However, we focused on sites with more than one logged plot and several censuses shortly after logging, with a minimum of two censuses, and the presence of pre-logging inventories.
 
 ## Preparation
 
@@ -49,12 +49,12 @@ metadata <- read_tsv("data/raw_data/metadata.tsv") |>
   mutate(harvest_year_min = min(harvest_year, na.rm = TRUE)) |>
   mutate(harvest_year = ifelse(site == "Paracou", 1986, harvest_year)) |>
   mutate(harvest_year_min = ifelse(site == "Paracou", 1986, harvest_year_min))
-vars <- c("ba", "diversity_q0_sp", "diversity_q0_sp_rar")
+vars <- c("ba", "diversity_q0_sp", "diversity_q0_sp_rar", "p_undet_spp")
 sites <- c(
   "Iracema", "Jari", "Jenaro Herrera", "Mbaiki", "Misiones", "Moju",
   "Pad Limo 2 Barracos", "Pad Limo Chico Bocao", "Pad Limo Cumaru",
   "Pad Limo Jatoba", "Pad Limo Pocao", "Pad Limo STCP",
-  "Paracou", "Tapajos Km114", "Tirimbina"
+  "Paracou", "Tapajos Km114", "Tirimbina", "SUAS"
   # "SUAS", # removed until diversity_q0_sp_rar is not computed in v10
 )
 pad_sites <- c(
@@ -88,9 +88,7 @@ data <- read_csv("data/raw_data/aggregated_data_v10.csv") |>
     year - harvest_year
   )) |>
   pivot_wider(names_from = variable, values_from = value) |>
-  mutate(sitenum = as.numeric(as.factor(site))) |>
   filter(treatment == "logged") |>
-  mutate(plotnum = as.numeric(as.factor(paste0(site, "_", plot)))) |>
   select(-longitude, harvest_year_min)
 dist_obs <- data |>
   filter(rel_year > 0) |>
@@ -105,6 +103,9 @@ dist_obs <- data |>
   mutate(dist_obs = ifelse(dist_obs < 0, 0, dist_obs))
 data |>
   left_join(dist_obs) |>
+  filter(dist_obs > 0) |> 
+  mutate(sitenum = as.numeric(as.factor(site))) |>
+  mutate(plotnum = as.numeric(as.factor(paste0(site, "_", plot)))) |>
   write_tsv("data/derived_data/data.tsv")
 ```
 
@@ -132,6 +133,26 @@ read_tsv("data/derived_data/data.tsv") |>
   ylab(expression("Basal Area" ~ "[BA, " ~ m^2 ~ ha^{
     -1
   } ~ "]")) +
+  geom_vline(xintercept = 0) +
+  scale_color_viridis_c("BA lost [%]")
+```
+
+## Undetermined species
+
+```{r coverage_sp}
+#| message: false
+#| warning: false
+#| fig-cap: "Raw species richness trajectories per site and plots with time after and before logging. Colors indicate basal area lost in percentage."
+read_tsv("data/derived_data/data.tsv") |>
+  ggplot(aes(rel_year, p_undet_spp*100,
+             group = paste(site, plot), col = dist_obs * 100
+  )) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~site, nrow = 6) +
+  theme_bw() +
+  xlab(expression("Time post logging" ~ "[ yr ]")) +
+  ylab(expression("Undetermined species" ~ "[ % ]")) +
   geom_vline(xintercept = 0) +
   scale_color_viridis_c("BA lost [%]")
 ```

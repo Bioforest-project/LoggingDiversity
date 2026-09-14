@@ -268,16 +268,6 @@ fits <- tibble(area = c(6.25, 4.00, 2.00, 1.00, 0.50, 0.25)) |>
   rowwise() |>
   mutate(files = list(list.files(directory, full.names = TRUE))) |>
   mutate(fit = list(as_cmdstan_fit(files)))
-time <- fits |>
-  mutate(time = list(fit$time()[[2]])) |>
-  select(area, time) |>
-  unnest(time)
-write_tsv(time, "data/derived_data/sensitivity_time_rec.tsv")
-gamma <- fits |>
-  mutate(gamma = list(fit$summary(c("gamma")))) |>
-  select(area, gamma) |>
-  unnest(gamma)
-write_tsv(gamma, "data/derived_data/sensitivity_gamma_rec.tsv")
 data_rec <- read_tsv("data/derived_data/sensitivity_data_rec.tsv")
 ind <- data_rec |>
   select(area, site, plot, subplot, sitenum, subplotnum, dist_obs) |>
@@ -292,50 +282,6 @@ delta <- fits |>
 write_tsv(delta, "data/derived_data/sensitivity_delta_rec.tsv")
 ```
 
-### Time
-
-```{r time}
-#| message: false
-#| warning: false
-#| fig-cap: "Duration recovery model."
-read_tsv("data/derived_data/sensitivity_time_rec.tsv") |>
-  ggplot(aes(paste0(area, "-ha"), total / 60)) +
-  geom_boxplot() +
-  theme_bw() +
-  xlab("") +
-  ylab("Time [ m ]") +
-  scale_y_log10()
-```
-
-### $\gamma$
-
-```{r gamma}
-#| message: false
-#| warning: false
-#| fig-cap: "Caption."
-read_tsv("data/derived_data/sensitivity_gamma_rec.tsv") |>
-  select(area, variable, median, sd, q5, q95) |>
-  na.omit() |>
-  ggplot(aes(paste0(area, "-ha"), median)) +
-  geom_hline(yintercept = 0, col = "darkgrey") +
-  geom_segment(aes(y = median - sd, yend = median + sd),
-    position = position_nudge(x = c(-0.1, 0.1))
-  ) +
-  geom_segment(aes(y = q5, yend = q95),
-    size = .3,
-    position = position_nudge(x = c(-0.1, 0.1))
-  ) +
-  geom_point(position = position_nudge(x = c(-0.1, 0.1))) +
-  theme_bw() +
-  xlab("") +
-  ylab(expression(gamma ~ "[" ~ "%" ~ "%"^{
-    -1
-  } ~ "]")) +
-  scale_color_discrete("")
-```
-
-### $\delta$
-
 ```{r delta}
 #| message: false
 #| warning: false
@@ -349,5 +295,21 @@ read_tsv("data/derived_data/sensitivity_delta_rec.tsv") |>
   facet_wrap(~ paste0(area, "-ha")) +
   xlab(expression(dist[BA] ~ "observed [ % lost ]")) +
   ylab(delta[~Diversity] ~ "[ % ]") +
-  ggpubr::stat_cor()
+  ggpubr::stat_regline_equation(aes(label = paste("atop(", ..eq.label.., ",", ..rr.label.., ")")))
+```
+
+```{r gamma}
+#| message: false
+#| warning: false
+#| fig-cap: "Caption."
+model_all <- read_tsv("data/derived_data/sensitivity_delta_rec.tsv") |>
+  na.omit() |>
+  mutate(dist = dist_obs * 100, 
+         delta = median * 100) |> 
+  group_by(area) |> 
+  nest() |> 
+  mutate(
+    model = map(data, ~ lm(delta ~ dist, data = .x))
+  )
+sjPlot::tab_model(model_all$model, dv.labels = model_all$area)
 ```

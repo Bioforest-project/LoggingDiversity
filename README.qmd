@@ -26,7 +26,6 @@ All **diversity** analyses rely on the quarto documents (`files.qmd`) that can b
   - Document structure definition in `_quarto.yml`
 - Data in `data/` with:
   - All raw data in `raw_data/`
-
   - All derived data in `derived_sata/`
 - Intermediary files in `outputs/`
 - Figures in `figures/`

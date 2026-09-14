@@ -8,3 +8,5 @@
 .RDataTmp
 references.html
 references_files/
+
+**/*.quarto_ipynb

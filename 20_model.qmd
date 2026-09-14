@@ -29,6 +29,10 @@ $$\begin{align}
 STP = \delta_{plot} \times (\frac{time}{\tau_{site}} \times e^{1-\frac{time}{\tau_{site}}})^2 \\
 \end{align}$$
 
+## Old
+
+> To be replaced by a *post-hoc* linear regression with uncertainty transmission to avoid a retro influence of the relation on $\delta$ estimates.
+
 We furthered linked the trajectories of species $richness$ to $disturbance$ with a hierarchical nested model that describes the relationship between the disturbance intensity of basal area and the intermediate diversity extremes that occur after disturbance, in line with the intermediate disturbance hypothesis, using a linear regression:
 
 $$\begin{align}
@@ -105,7 +109,7 @@ data.frame(time = seq(0.1, 30, length.out = 100)) |>
 
 Chunks below help running the models for raw and rarefied species richness.
 
-```{r fit_rarefied}
+```{r fit_raw}
 #| eval: false
 library(cmdstanr)
 out <- file.path("chains", "raw")
@@ -146,7 +150,7 @@ fit <- model$sample(
 )
 ```
 
-```{r fit_raw}
+```{r fit_rarefied}
 #| eval: false
 library(cmdstanr)
 out <- file.path("chains", "rarefied")
